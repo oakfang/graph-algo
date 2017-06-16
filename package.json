@@ -1,0 +1,23 @@
+{
+  "name": "graph-algo",
+  "version": "1.0.0",
+  "description": "A [graph-core](https://github.com/oakfang/graph-core) based graph-related algorithms",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc ava -v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oakfang/graph-algo.git"
+  },
+  "keywords": [
+    "graph",
+    "algorithms"
+  ],
+  "author": "Alon Niv",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oakfang/graph-algo/issues"
+  },
+  "homepage": "https://github.com/oakfang/graph-algo#readme"
+}
