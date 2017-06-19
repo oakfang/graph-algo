@@ -19,5 +19,14 @@
   "bugs": {
     "url": "https://github.com/oakfang/graph-algo/issues"
   },
-  "homepage": "https://github.com/oakfang/graph-algo#readme"
+  "homepage": "https://github.com/oakfang/graph-algo#readme",
+  "dependencies": {
+    "itercol": "^2.1.0",
+    "xype": "^1.2.0"
+  },
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "graph-core": "^1.1.0",
+    "nyc": "^11.0.2"
+  }
 }

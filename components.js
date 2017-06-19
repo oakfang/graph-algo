@@ -1,24 +1,15 @@
-module.exports = graph => {
+module.exports = (graph, type) => {
     const visited = new Set();
-    const chains = [];
-    const dfs = (v, chain) => {
-        if (!visited.has(v)) {
-            visited.add(v);
-            chain.push(v);
-            for (const {target} of graph.outEdges(v.id)) {
-                dfs(graph.vertex(target), chain);
-            }
-            for (const {origin} of graph.inEdges(v.id)) {
-                dfs(graph.vertex(origin), chain);
-            }
-        }
-        return chain;
+    const dfsMapper = v => {
+        visited.add(v);
+        const out = Array.from(graph.allEdges(v.id)
+                                    .filter(({type: edgeType}) =>
+                                        type ? type === edgeType : true)
+                                    .map(({origin, target}) =>
+                                        graph.vertex(v.id === target ? origin : target))
+                                    .filter(v => !visited.has(v))
+                                    .map(dfsMapper));
+        return [v, ...out];
     };
-    for (const v of graph.vertices()) {
-        const chain = dfs(v, []);
-        if (chain.length) {
-            chains.push(chain);
-        }
-    }
-    return chains;
+    return graph.vertices().filter(v => !visited.has(v)).map(dfsMapper);
 };

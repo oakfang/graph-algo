@@ -1,24 +1,28 @@
-function doDfs(graph, vertex, visited, acc, postorder) {
-    if (!visited.has(vertex)) {
-        visited.add(vertex);
-        if (!postorder) acc.push(vertex);
-        for (const _v of
-             graph.outEdges(vertex.id)
-                  .map(({target}) => graph.vertex(target))) {
-            doDfs(graph, vertex, visited, acc, postorder);
-        }
-        if (postorder) acc.push(vertex);
-    }
-}
+const { match, typeby } = require('xype');
+const iter = require('itercol');
 
-module.exports = (graph, vertices, order='post') => {
-    if (!vertices[Symbol.iterator]) {
-        vertices = [vertices];
-    }
+const Iterable = typeby(val => (typeof val === 'object') && val[Symbol.iterator]);
+const normalize = match([
+    [Iterable, iter],
+    [x => iter([x])],
+]);
+
+module.exports = (graph, vertices, postorder=true, type) => {
     const visited = new Set();
-    const acc = [];
-    for (const v of vertices) {
-        doDfs(graph, v, visited, acc, order === 'post');
-    }
-    return acc;
+    const dfsMapper = v => {
+        visited.add(v);
+        const out = Array.from(graph.outEdges(v.id)
+                                    .filter(({type: edgeType}) =>
+                                        type ? type === edgeType : true)
+                                    .map(({target}) =>
+                                        graph.vertex(target))
+                                    .filter(v => !visited.has(v))
+                                    .map(dfsMapper)
+                                    .flatten());
+        return postorder ? [...out, v] : [v, ...out];
+    };
+    return normalize(vertices)
+            .filter(v => !visited.has(v))
+            .map(dfsMapper)
+            .flatten();
 };
